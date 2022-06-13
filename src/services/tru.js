@@ -2,7 +2,7 @@ const moment = require("moment");
 const fetch = require("node-fetch");
 const httpSignature = require("http-signature");
 const jwksClient = require("jwks-rsa");
-const config = require("./tru.json");
+const config = require("../../config/tru.json");
 
 const tru_api_base_url = 'https://eu.api.tru.id';
 const keyClient = jwksClient({

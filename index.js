@@ -1,33 +1,61 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const server = require('./src/server')
 
-app.use('/static', express.static('public'))
+server.serve()
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// const express = require('express');
+// const app = express();
+// const exphbs = require('express-handlebars');
+// const cookieParser = require('cookie-parser');
+// const bodyParser = require('body-parser');
+// const db = require('./models');
 
-// Login form submitted
-app.post('/login', (req, res) => {
-  res.send('POST login')
-})
+// const port = 3000;
 
-// Login page rendered
-app.get('/login', (req, res) => {
-  res.send('GET login')
-})
+// // This will hold the users and authToken related to users
+// const authTokens = {};
 
-// Password Reset page rendered
-app.get('/password-reset', (req, res) => {
-  res.send('GET password-reset')
-})
+// const requireAuth = (req, res, next) => {
+//   if (req.user) {
+//       next();
+//   } else {
+//     res.render('login', {
+//       message: 'Please login to continue',
+//       messageClass: 'alert-danger'
+//     });
+//   }
+// };
 
-// Password reset form submitted
-app.post('/password-reset', (req, res) => {
-  res.send('POST password-reset')
-})
+// // To support URL-encoded bodies
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// // To parse cookies from the HTTP Request
+// app.use(cookieParser());
+
+// app.engine('.hbs', exphbs.engine({ 
+//   extname: '.hbs', 
+//   defaultLayout: "main"
+// }));
+
+// app.set('view engine', 'hbs');
+
+// app.use((req, res, next) => {
+//   // Get auth token from the cookies
+//   const authToken = req.cookies['AuthToken'];
+
+//   // Inject the user to the request
+//   req.user = authTokens[authToken];
+
+//   next();
+// });
+
+// app.get('/', (req, res) => {
+//   res.render('home');
+// })
+
+
+
+
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
