@@ -1,7 +1,7 @@
 const { Router } = require('express')
 
-const { getRegister, postRegister, getLogin, postLogin, getPasswordReset, postPasswordReset } = require('./routes/auth')
-const { getProtected } = require('./routes/admin')
+const auth = require('./routes/auth')
+const admin = require('./routes/admin')
 
 const router = Router()
 
@@ -12,16 +12,18 @@ async function getHome(req, res) {
 function routes() {
   router.get('/', getHome)
 
-  router.get('/register', getRegister)
-  router.post('/register', postRegister)
+  router.get('/register', auth.getRegister)
+  router.post('/register', auth.postRegister)
 
-  router.get('/login', getLogin)
-  router.post('/login', postLogin)
+  router.get('/login', auth.getLogin)
+  router.post('/login', auth.postLogin)
 
-  router.get('/password-reset', getPasswordReset)
-  router.get('/password-reset', postPasswordReset)
+  router.get('/logout', auth.getLogout)
 
-  router.get('/protected', getProtected)
+  router.get('/password-reset', auth.getPasswordReset)
+  router.get('/password-reset', auth.postPasswordReset)
+
+  router.get('/protected', admin.requireAuth, admin.getProtected)
 
   return router
 }

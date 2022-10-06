@@ -99,11 +99,17 @@ async function postPasswordReset(req, res) {
   });
 }
 
+async function getLogout(req, res) {
+  res.clearCookie("AuthToken");
+  res.redirect("/");
+}
+
 module.exports = {
   getRegister,
   postRegister,
   getLogin,
   postLogin,
   getPasswordReset,
-  postPasswordReset
+  postPasswordReset,
+  getLogout
 }
