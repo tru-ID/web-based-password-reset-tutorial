@@ -6,7 +6,7 @@ const routes = require('./routes')
 const { getAuthToken } = require('./config/authTokens')
 const ngrok = require('ngrok');
 
-const port = 3000;
+const port = 4000;
 
 async function connectNgrok() {
   let url = await ngrok.connect({
