@@ -23,6 +23,12 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING
       },
+      passwordResetCode: {
+        type: Sequelize.STRING
+      },
+      passwordResetCodeExpiry: {
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
