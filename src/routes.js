@@ -21,7 +21,10 @@ function routes() {
   router.get('/logout', auth.getLogout)
 
   router.get('/password-reset', auth.getPasswordReset)
-  router.get('/password-reset', auth.postPasswordReset)
+  router.post('/password-reset', auth.postPasswordReset)
+
+  router.get('/password-reset-code', auth.getPasswordResetCode)
+  router.post('/password-reset-code', auth.postPasswordResetCode)
 
   router.get('/protected', admin.requireAuth, admin.getProtected)
 
