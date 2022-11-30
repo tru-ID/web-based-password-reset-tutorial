@@ -45,6 +45,7 @@ npm start
 In your browser open `http://localhost:3000`. To test these users log in as:
 
 * `valid.phone.number@example.com` (password = `password`)
+* `valid.phone.number.sim.changed@example.com` (password = `password`)
 * or `invalid.phone.number@example.com` (password = `password`)
 
 ## Meta
