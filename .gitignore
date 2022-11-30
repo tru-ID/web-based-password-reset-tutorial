@@ -1,3 +1,4 @@
 node_modules
 tru.json
 database.sqlite3
+.env

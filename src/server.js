@@ -4,7 +4,8 @@ const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes')
 const { getAuthToken } = require('./config/authTokens')
-const ngrok = require('ngrok');
+const ngrok = require('ngrok')
+require('dotenv').config()
 
 const port = 3000;
 

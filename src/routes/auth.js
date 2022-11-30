@@ -1,6 +1,7 @@
 const { getHashedPassword, generateAuthToken } = require('../utils/auth')
 const { setAuthToken } = require('../config/authTokens')
 const db = require('../models')
+const vonage = require('../api/vonage')
 
 async function getRegister(req, res) {
   res.render('register');
@@ -23,7 +24,7 @@ async function postRegister(req, res) {
       return;
     }
 
-    const hashedPassword = getHashedPassword(password);
+    const hashedPassword = getHashedPassword(password)
 
     await db.User.create({
       firstName: firstName,
@@ -46,7 +47,14 @@ async function postRegister(req, res) {
 }
 
 async function getLogin(req, res) {
-  res.render('login');
+  if (req.query.message) {
+    return res.render('login', {
+      message: req.query.message,
+      messageClass: req.query.messageClass
+    })
+  }
+
+  res.render('login')
 }
 
 async function postLogin(req, res) {
@@ -59,7 +67,6 @@ async function postLogin(req, res) {
 
     // Store authentication token
     setAuthToken(authToken, user)
-    
 
     // Setting the auth token in cookies
     res.cookie('AuthToken', authToken);
@@ -93,10 +100,73 @@ async function postPasswordReset(req, res) {
     });
   }
 
-  res.render('login', {
-    message: 'Reset Password Link sent via Email',
-    messageClass: 'alert-danger'
-  });
+  const vonageRes = await vonage.createVerification(user.phone)
+
+  if (vonageRes !== null) {
+    await user.update({ requestId: vonageRes })
+    await user.save()
+
+    return res.redirect('password-reset-code')
+  }
+
+  return res.redirect('login')
+}
+
+async function getPasswordResetCode(req, res) {
+  const { messageClass, message } = req.query
+
+  if (message) {
+    res.render('password-reset-code', {
+      message: message,
+      messageClass: messageClass
+    })
+
+    return;
+  }
+
+  res.render('password-reset-code')
+}
+
+async function postPasswordResetCode(req, res) {
+  const { email, password, password2, code } = req.body
+
+  // Check if user with the same email is also registered
+  const user = await db.User.findOne({ where: { email: email } })
+
+  if (!user) {
+    res.redirect('/login?message=Invalid email&messageClass=alert-danger')
+  }
+
+  if (password !== password2) {
+    res.render('register', {
+      message: 'Passwords do not match.',
+      messageClass: 'alert-danger'
+    })
+  }
+
+  const vonageRes = await vonage.verify(user.requestId, code)
+
+  if (vonageRes !== null) {
+    const hashedPassword = getHashedPassword(password)
+
+    await user.update({ requestId: null, password: hashedPassword })
+    await user.save()
+
+    let message = 'Password successfully reset, please log in with your new credentials.'
+    let messageClass = 'alert-success'
+
+    return res.redirect(`/login?message=${message}&messageClass=${messageClass}`)
+  }
+
+  let message = 'No password-reset in progress. Please restart.'
+  let messageClass = 'alert-danger'
+
+  return res.redirect(`/login?message=${message}&messageClass=${messageClass}`)
+}
+
+async function getLogout(req, res) {
+  res.clearCookie("AuthToken")
+  res.redirect("/")
 }
 
 module.exports = {
@@ -105,5 +175,8 @@ module.exports = {
   getLogin,
   postLogin,
   getPasswordReset,
-  postPasswordReset
+  postPasswordReset,
+  getPasswordResetCode,
+  postPasswordResetCode,
+  getLogout
 }
