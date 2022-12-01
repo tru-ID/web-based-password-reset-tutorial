@@ -44,6 +44,13 @@ async function postRegister(req, res) {
 }
 
 async function getLogin(req, res) {
+  if (req.query.message) {
+    return res.render('login', {
+      message: req.query.message,
+      messageClass: req.query.messageClass
+    })
+  }
+
   res.render('login')
 }
 
@@ -98,6 +105,17 @@ async function postPasswordReset(req, res) {
 }
 
 async function getPasswordResetCode(req, res) {
+  const { messageClass, message } = req.query
+
+  if (message) {
+    res.render('password-reset-code', {
+      message: message,
+      messageClass: messageClass
+    })
+
+    return;
+  }
+
   res.render('password-reset-code')
 }
 
