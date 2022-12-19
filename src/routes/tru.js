@@ -23,7 +23,7 @@ async function createSubscriberCheck(req, res) {
     )
 
     if (subscriberCheckRes === false) {
-      return res.status(400)
+      return res.sendStatus(400)
     }
 
     // Select data to send to client
@@ -33,7 +33,7 @@ async function createSubscriberCheck(req, res) {
     })
   } catch (error) {
     console.log(error)
-    return res.status(500)
+    return res.sendStatus(500)
   }
 }
 
@@ -44,7 +44,7 @@ async function checkCoverage(req, res) {
     return res.status(200).json({coverage: coverageCheckRes})
   } catch (error) {
     console.log(error)
-    res.status(500)
+    res.sendStatus(500)
   }
 }
 
