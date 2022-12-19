@@ -4,18 +4,8 @@ const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes')
 const { getAuthToken } = require('./config/authTokens')
-const ngrok = require('ngrok');
 
-const port = 4000;
-
-async function connectNgrok() {
-  let url = await ngrok.connect({
-    proto: 'http',
-    port: port,
-  });
-
-  console.log('Ngrok connected, URL: ' + url);
-}
+const port = 3000;
 
 async function serve() {
   const app = express()
@@ -52,10 +42,7 @@ async function serve() {
   app.use(routes())
 
   const server = app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-    console.log('Starting Ngrok now')
-
-    connectNgrok();
+    console.log(`Web app listening at http://localhost:${port}`)
   })
 
   return {
